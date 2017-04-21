@@ -7,13 +7,6 @@ username = ''
 password = ''
 login = {}
 
-class user_input():
-	def __init__(self,base_url,username,password):
-		self.base_url = base_url
-		self.username = username
-		self.password = password
-		self.login = {'username':username,'password':password}
-
 class scan():
     def __init__(self,name,id):
         self.name = name
@@ -39,9 +32,12 @@ def get_scan_data(id):
     resp = requests.get(base_url + '/scans/' + str(id), data=None, headers=headers, verify=False)
 	return list_of_stuff
 
+def send_data(list_of_chosen_data):
 
-if __name__ == '__main__':
-    base_url = raw_input("Enter your base url for Nessus (e.g. https://10.10.10.10:8834): ")
-    username = raw_input("Enter your login username: ")
-    password = getpass.getpass("Enter your login password: ")
+
+
+def login(url,un,pw,port):
+	base_url = 'https://'+url+':'+port
+    username = un 
+    password = pw
     login = {'username': username, 'password': password}
