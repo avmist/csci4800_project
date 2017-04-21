@@ -7,6 +7,13 @@ username = ''
 password = ''
 login = {}
 
+class user_input():
+	def __init__(self,base_url,username,password):
+		self.base_url = base_url
+		self.username = username
+		self.password = password
+		self.login = {'username':username,'password':password}
+
 class scan():
     def __init__(self,name,id):
         self.name = name
@@ -30,6 +37,7 @@ def get_scan_data(id):
     token = get_token()
     headers = {'X-Cookie': 'token=' + token, 'content-type': 'application/json'}
     resp = requests.get(base_url + '/scans/' + str(id), data=None, headers=headers, verify=False)
+	return list_of_stuff
 
 
 if __name__ == '__main__':
