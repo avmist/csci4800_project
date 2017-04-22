@@ -2,11 +2,7 @@ import requests
 import json
 import getpass
 import docx
-
-'''
-login = {} # JSON object for requesting token
-base_url = ''
-'''
+import pprint
 
 # initialize login JSON object for requesting token
 def login(ip,un,pw,port):
@@ -23,7 +19,7 @@ def get_scans(login,base_url):
     scan_names = []
     token = get_token(login,base_url)
     headers = {'X-Cookie': 'token=' + token, 'content-type': 'application/json'}
-    scans = requests.get(base_url + '/scans', data=None, headers=headers, verify=False).json()['scans']
+    scans = json.loads(requests.get(base_url + '/scans', data=None, headers=headers, verify=False).content)['scans']
     for scan in scans:
         scan_names.append(scan['name'])
     return scan_names
@@ -37,8 +33,23 @@ def get_scan_data(login,base_url,name):
     for scan in scans:
         if scan['name'] == name:
             id = scan['id']
-    scan_data = requests.get(base_url + '/scans/' + str(id), data=None, headers=headers, verify=False)
-    for scan_item in scan_data:
-        scan_items.append(scan_item)
-def createDocument(opts,loc):
-    print "Hello World"
+    scan_data = json.loads(requests.get(base_url + '/scans/' + str(id), data=None, headers=headers, verify=False).content)
+    return scan_data.keys()
+
+def createDocument(login,base_url,chosen_scan,opts,loc):
+    print loc
+    token = get_token(login,base_url)
+    headers = {'X-Cookie': 'token=' + token, 'content-type': 'application/json'}
+    scans = requests.get(base_url + '/scans', data=None, headers=headers, verify=False).json()['scans']
+    for scan in scans:
+        if scan['name'] == chosen_scan:
+            id = scan['id']
+    scan_data = json.loads(requests.get(base_url + '/scans/' + str(id), data=None, headers=headers, verify=False).content)
+    doc = docx.Document()
+    for opt in opts:
+        doc.add_heading(opt,1)
+        jsonObj = json.dumps(scan_data[opt],indent=4).replace(',','').replace('[','').replace(']','').replace('{','').replace('}','').replace('"','')
+        print jsonObj
+        for i in jsonObj.splitlines():
+            doc.add_paragraph(i)
+    doc.save(loc)
