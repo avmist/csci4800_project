@@ -3,6 +3,7 @@ import json
 import getpass
 import docx
 import pprint
+from datetime import date
 
 # initialize login JSON object for requesting token
 def login(ip,un,pw,port):
@@ -48,8 +49,10 @@ def createDocument(login,base_url,chosen_scan,opts,loc):
             id = scan['id']
     scan_data = json.loads(requests.get(base_url + '/scans/' + str(id), data=None, headers=headers, verify=False).content)
     doc = docx.Document()
+    doc.add_heading('Scan: ' + chosen_scan,1)
+    doc.add_heading('File generated on ' + str(date.today()))
     for opt in opts:
-        doc.add_heading(opt,1)
+        doc.add_heading(opt,2)
         jsonObj = json.dumps(scan_data[opt],indent=4).replace(',','').replace('[','').replace(']','').replace('{','').replace('}','').replace('"','')
         print jsonObj
         for i in jsonObj.splitlines():
