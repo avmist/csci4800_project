@@ -37,6 +37,8 @@ def get_scan_data(login,base_url,name):
     return scan_data.keys()
 
 def createDocument(login,base_url,chosen_scan,opts,loc):
+    if not loc.endswith('.docx'):
+        loc += '.docx'
     print loc
     token = get_token(login,base_url)
     headers = {'X-Cookie': 'token=' + token, 'content-type': 'application/json'}
